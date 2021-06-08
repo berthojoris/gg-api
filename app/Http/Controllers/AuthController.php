@@ -5,45 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
-        $fields = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
-        ]);
+    public function register(RegisterRequest $request) {
 
         $user = User::create([
-            'name' => $fields['name'],
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password'])
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
         ]);
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
+        $token = $user->createToken(date("Y-m-d")."2021@GudangGaramTBK")->plainTextToken;
 
         $response = [
-            'user' => $user,
-            'token' => $token
+            'data' => $user,
+            'token' => $token,
+            'message' => "Register Success"
         ];
 
         return response($response, 201);
     }
 
-    public function login(Request $request) {
-        $fields = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string'
-        ]);
+    public function login(LoginRequest $request) {
 
-        // Check email
-        $user = User::where('email', $fields['email'])->first();
+        $user = User::where('email', $request->email)->first();
 
-        // Check password
-        if(!$user || !Hash::check($fields['password'], $user->password)) {
+        if(!$user || !Hash::check($request->password, $user->password)) {
             return response([
+                'data' => null,
+                'token' => null,
                 'message' => 'Bad credentials'
             ], 401);
         }
@@ -51,8 +45,9 @@ class AuthController extends Controller
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'user' => $user,
-            'token' => $token
+            'data' => $user,
+            'token' => $token,
+            'message' => 'Login success'
         ];
 
         return response($response, 201);
@@ -62,7 +57,9 @@ class AuthController extends Controller
         auth()->user()->tokens()->delete();
 
         return [
-            'message' => 'Logged out'
+            'data' => null,
+            'token' => null,
+            'message' => 'Logout success'
         ];
     }
 }
