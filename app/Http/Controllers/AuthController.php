@@ -11,6 +11,11 @@ use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
+    public function userActive(Request $request)
+    {
+        return auth()->user();
+    }
+
     public function register(RegisterRequest $request) {
 
         $user = User::create([
