@@ -19,7 +19,7 @@ class AuthController extends Controller
             'password' => bcrypt($request->password)
         ]);
 
-        $token = $user->createToken(date("Y-m-d")."2021@GudangGaramTBK")->plainTextToken;
+        $token = $user->createToken(config('app.token_name'))->plainTextToken;
 
         $response = [
             'data' => $user,
@@ -27,7 +27,7 @@ class AuthController extends Controller
             'message' => "Register Success"
         ];
 
-        return response($response, 201);
+        return response()->json($response);
     }
 
     public function login(LoginRequest $request) {
@@ -42,7 +42,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
+        $token = $user->createToken(config('app.token_name'))->plainTextToken;
 
         $response = [
             'data' => $user,
@@ -50,10 +50,11 @@ class AuthController extends Controller
             'message' => 'Login success'
         ];
 
-        return response($response, 201);
+        return response()->json($response);
     }
 
     public function logout(Request $request) {
+
         auth()->user()->tokens()->delete();
 
         return [

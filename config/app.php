@@ -27,6 +27,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'token_name' => env('TOKEN_NAME', 'production'),
 
     /*
     |--------------------------------------------------------------------------
