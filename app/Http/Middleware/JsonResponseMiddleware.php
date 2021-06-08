@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\ResponseFactory;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class JsonResponseMiddleware
 {

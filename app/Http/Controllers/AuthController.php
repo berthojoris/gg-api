@@ -32,7 +32,7 @@ class AuthController extends Controller
             'message' => "Register Success"
         ];
 
-        return response()->json($response);
+        return response()->json($response, 201);
     }
 
     public function login(LoginRequest $request) {
@@ -40,7 +40,8 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if(!$user || !Hash::check($request->password, $user->password)) {
-            return response([
+
+            return response()->json([
                 'data' => null,
                 'token' => null,
                 'message' => 'Bad credentials'
@@ -55,17 +56,17 @@ class AuthController extends Controller
             'message' => 'Login success'
         ];
 
-        return response()->json($response);
+        return response()->json($response, 200);
     }
 
     public function logout(Request $request) {
 
         auth()->user()->tokens()->delete();
 
-        return [
+        return response()->json([
             'data' => null,
             'token' => null,
             'message' => 'Logout success'
-        ];
+        ], 200);
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RegisterAppController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::post('/registerapp', [RegisterAppController::class, 'registerapp']);
 
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -32,5 +33,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::post('/approved', [RegisterAppController::class, 'approved']);
+    Route::post('/rejected', [RegisterAppController::class, 'rejected']);
+
     Route::get('/user', [AuthController::class, 'userActive']);
 });
